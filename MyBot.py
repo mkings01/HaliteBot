@@ -14,7 +14,7 @@ while True:
                 # if full strength, move in a random direction
                 mystrength = gameMap.getSite(location).strength
                 if mystrength == 255:
-                    moves.append(Move(location, random.choice(DIRECTIONS)))
+                    moves.append(Move(location, random.choice([NORTH, WEST])))
                 # otherwise move if you can capture a site
                 else:
                     for dir in CARDINALS:
