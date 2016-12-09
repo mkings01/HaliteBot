@@ -25,7 +25,7 @@ def dirToNearestBorder(location):
                 retVal = dir
                 break
         distance += 1
-        if (distance > 5):
+        if (distance > 4):
             if (location.x + location.y)%2 == 1:
                 retVal = NORTH
             else:
@@ -49,7 +49,7 @@ while True:
                     capturefound = False
                     #check to see if anything can be captured, and take it
                     for dir in CARDINALS:
-                        if ((gameMap.getSite(location, dir).owner != myID) and ((mystrength >= gameMap.getSite(location, dir).strength) or (mystrength == 255))):
+                        if ((gameMap.getSite(location, dir).owner != myID) and ((mystrength > gameMap.getSite(location, dir).strength) or (mystrength == 255))):
                             moves.append(Move(location, dir))
                             capturefound = True
                             break
