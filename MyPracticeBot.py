@@ -35,11 +35,5 @@ while True:
                             moves.append(Move(location, dir))
                             capturefound = True
                             break
-                    # if not, check to see if lots of strength, then combine with a higher strength neighbor that's also on the border (this way we don't trade places)
-                    if (capturefound == False) and (mystrength > (6 * gameMap.getSite(location).production)):
-                        for dir in CARDINALS: 
-                                moves.append(Move(location, dir))
-                                capturefound = True
-                                break
 
     sendFrame(moves)
