@@ -35,29 +35,40 @@ def dirToNearestBorder(location):
 while True:
     moves = []
     gameMap = getFrame()
+    moveToPlanned = [[False for x in xrange(gameMap.width)] for x in xrange(gameMap.height)]
     for y in range(gameMap.height):
         for x in range(gameMap.width):
             location = Location(x, y)
             if gameMap.getSite(location).owner == myID:
                 mystrength = gameMap.getSite(location).strength
-                # if at high strength, and in friendly territory, move to the nearest border
+                # if at high strength, and in friendly territory, move towards the nearest border
                 if (isInFriendlyTerritory(location)):
                     if(mystrength > (6 * gameMap.getSite(location).production)):
-                        moves.append(Move(location, dirToNearestBorder(location)))
+                        targetDirection = dirToNearestBorder(location)
+                        targetLocation = gameMap.getLocation(location, targetDirection)
+                        if(not moveToPlanned[targetLocation.x][targetLocation.y]):
+                            moves.append(Move(location, targetDirection))
+                            moveToPlanned[targetLocation.x][targetLocation.y] = True
                 # if on the border, move if you can capture a site
                 else:
                     capturefound = False
                     #check to see if anything can be captured, and take it
                     for dir in CARDINALS:
-                        if ((gameMap.getSite(location, dir).owner != myID) and ((mystrength > gameMap.getSite(location, dir).strength) or (mystrength == 255))):
+                        targetLocation = gameMap.getLocation(location, dir)
+                        targetSite = gameMap.getSite(targetLocation)
+                        if ((not moveToPlanned[targetLocation.x][targetLocation.y]) and (targetSite.owner != myID) and ((mystrength > targetSite.strength) or (mystrength == 255))):
                             moves.append(Move(location, dir))
+                            moveToPlanned[targetLocation.x][targetLocation.y] = True
                             capturefound = True
                             break
                     # if not, check to see if lots of strength, then combine with a higher strength neighbor that's also on the border (this way we don't trade places)
                     if (capturefound == False) and (mystrength > (6 * gameMap.getSite(location).production)):
                         for dir in CARDINALS: 
-                            if (gameMap.getSite(location, dir).owner == myID) and (gameMap.getSite(location, dir).strength > mystrength) and (not isInFriendlyTerritory(gameMap.getLocation(location, dir))):
+                            targetLocation = gameMap.getLocation(location, dir)
+                            targetSite = gameMap.getSite(targetLocation)
+                            if (targetSite.owner == myID) and (targetSite.strength > mystrength) and (not isInFriendlyTerritory(targetLocation)):
                                 moves.append(Move(location, dir))
+                                moveToPlanned[targetLocation.x][targetLocation.y] = True
                                 capturefound = True
                                 break
 
