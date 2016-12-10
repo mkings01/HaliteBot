@@ -13,8 +13,14 @@ def isInFriendlyTerritory(location):
 
 def dirToNearestBorder(location):
     retVal = STILL
-    distance = 1
+    DISTANCE_INTERVAL = 5
+    MAX_DISTANCE = 10
+    distance = 0
+
     while (retVal==STILL):
+        distance += DISTANCE_INTERVAL
+        if (distance > MAX_DISTANCE):
+            retVal = (location.x + location.y)%2 + 1
         for dir in CARDINALS:
             distanceCounter = distance
             targetLocation = location
@@ -24,12 +30,6 @@ def dirToNearestBorder(location):
             if(gameMap.getSite(targetLocation).owner != myID):
                 retVal = dir
                 break
-        distance += 1
-        if (distance > 4):
-            if (location.x + location.y)%2 == 1:
-                retVal = NORTH
-            else:
-                retVal = WEST
     return retVal
 
 while True:

@@ -35,7 +35,7 @@ def dirToNearestBorder(location):
 while True:
     moves = []
     gameMap = getFrame()
-    moveToPlanned = [[False for x in xrange(gameMap.width)] for x in xrange(gameMap.height)]
+    moveToPlanned = [[False for x in range(gameMap.width)] for x in range(gameMap.height)]
     for y in range(gameMap.height):
         for x in range(gameMap.width):
             location = Location(x, y)
