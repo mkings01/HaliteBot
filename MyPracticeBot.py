@@ -11,6 +11,27 @@ def isInFriendlyTerritory(location):
             retVal = False
     return retVal
 
+def dirToNearestBorder(location):
+    retVal = STILL
+    distance = 1
+    while (retVal==STILL):
+        for dir in CARDINALS:
+            distanceCounter = distance
+            targetLocation = location
+            while(distanceCounter > 0):
+                targetLocation = gameMap.getLocation(targetLocation, dir)
+                distanceCounter -= 1
+            if(gameMap.getSite(targetLocation).owner != myID):
+                retVal = dir
+                break
+        distance += 1
+        if (distance > 4):
+            if (location.x + location.y)%2 == 1:
+                retVal = NORTH
+            else:
+                retVal = WEST
+    return retVal
+
 while True:
     moves = []
     gameMap = getFrame()
@@ -19,19 +40,16 @@ while True:
             location = Location(x, y)
             if gameMap.getSite(location).owner == myID:
                 mystrength = gameMap.getSite(location).strength
-                # if at high strength, and in friendly territory, move either north or west, depending on your location
+                # if at high strength, and in friendly territory, move to the nearest border
                 if (isInFriendlyTerritory(location)):
                     if(mystrength > (6 * gameMap.getSite(location).production)):
-                        if (x+y)%2 == 1:
-                            moves.append(Move(location, NORTH))
-                        else:
-                            moves.append(Move(location, WEST))
+                        moves.append(Move(location, dirToNearestBorder(location)))
                 # if on the border, move if you can capture a site
                 else:
                     capturefound = False
                     #check to see if anything can be captured, and take it
                     for dir in CARDINALS:
-                        if ((gameMap.getSite(location, dir).owner != myID) and (mystrength >= gameMap.getSite(location, dir).strength)):
+                        if ((gameMap.getSite(location, dir).owner != myID) and ((mystrength > gameMap.getSite(location, dir).strength) or (mystrength == 255))):
                             moves.append(Move(location, dir))
                             capturefound = True
                             break
