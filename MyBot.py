@@ -14,7 +14,7 @@ def isInFriendlyTerritory(location):
 def dirToNearestBorder(location):
     retVal = STILL
     DISTANCE_INTERVAL = 5
-    MAX_DISTANCE = 10
+    MAX_DISTANCE = 5
     distance = 0
 
     while (retVal==STILL):
