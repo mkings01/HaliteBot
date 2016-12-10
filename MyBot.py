@@ -35,7 +35,7 @@ def dirToNearestBorder(location):
 while True:
     moves = []
     gameMap = getFrame()
-    moveToPlanned = [[False for x in range(gameMap.width)] for x in range(gameMap.height)]
+    moveToPlanned = [[False for x in range(gameMap.width + 1)] for x in range(gameMap.height + 1)]
     for y in range(gameMap.height):
         for x in range(gameMap.width):
             location = Location(x, y)
@@ -46,7 +46,7 @@ while True:
                     if(mystrength > (6 * gameMap.getSite(location).production)):
                         targetDirection = dirToNearestBorder(location)
                         targetLocation = gameMap.getLocation(location, targetDirection)
-                        if(not moveToPlanned[targetLocation.x][targetLocation.y]):
+                        if(not moveToPlanned[targetLocation.x][targetLocation.y]) and ((mystrength + gameMap.getSite(targetLocation).strength < 300)):
                             moves.append(Move(location, targetDirection))
                             moveToPlanned[targetLocation.x][targetLocation.y] = True
                 # if on the border, move if you can capture a site
