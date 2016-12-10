@@ -1,8 +1,12 @@
 from hlt import *
 from networking import *
+import logging
 
 myID, gameMap = getInit()
 sendInit("MyPythonBot")
+
+logging.basicConfig(filename='MyBot.log',level=logging.DEBUG)
+logging.debug('Starting debug log')
 
 def isInFriendlyTerritory(location):
     retVal = True
@@ -13,7 +17,7 @@ def isInFriendlyTerritory(location):
 
 def dirToNearestBorder(location):
     retVal = STILL
-    DISTANCE_INTERVAL = 5
+    DISTANCE_INTERVAL = 4
     MAX_DISTANCE = 5
     distance = 0
 
@@ -56,7 +60,7 @@ while True:
                     for dir in CARDINALS:
                         targetLocation = gameMap.getLocation(location, dir)
                         targetSite = gameMap.getSite(targetLocation)
-                        if ((not moveToPlanned[targetLocation.x][targetLocation.y]) and (targetSite.owner != myID) and ((mystrength > targetSite.strength) or (mystrength == 255))):
+                        if ((targetSite.owner != myID) and ((mystrength > targetSite.strength) or (mystrength == 255))):
                             moves.append(Move(location, dir))
                             moveToPlanned[targetLocation.x][targetLocation.y] = True
                             capturefound = True
