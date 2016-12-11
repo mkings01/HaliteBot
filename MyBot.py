@@ -39,7 +39,7 @@ def dirToNearestBorder(location):
 while True:
     moves = []
     gameMap = getFrame()
-    moveToPlanned = [[False for i in range(gameMap.width + 1)] for j in range(gameMap.height + 1)]
+    moveToPlanned = [[False for i in range(gameMap.height)] for j in range(gameMap.width)]
     for y in range(gameMap.height):
         for x in range(gameMap.width):
             location = Location(x, y)
@@ -52,6 +52,7 @@ while True:
                         targetLocation = gameMap.getLocation(location, targetDirection)
                         if(not moveToPlanned[targetLocation.x][targetLocation.y]) and ((mystrength + gameMap.getSite(targetLocation).strength < 300)):
                             moves.append(Move(location, targetDirection))
+                            logging.debug('Target inside move: x=' + str(targetLocation.x) + ' y=' + str(targetLocation.y) )
                             moveToPlanned[targetLocation.x][targetLocation.y] = True
                 # if on the border, move if you can capture a site
                 else:
@@ -62,6 +63,7 @@ while True:
                         targetSite = gameMap.getSite(targetLocation)
                         if ((targetSite.owner != myID) and ((mystrength > targetSite.strength) or (mystrength == 255))):
                             moves.append(Move(location, dir))
+                            logging.debug('Target capture move: x=' + str(targetLocation.x) + ' y=' + str(targetLocation.y) )
                             moveToPlanned[targetLocation.x][targetLocation.y] = True
                             capturefound = True
                             break
@@ -72,6 +74,7 @@ while True:
                             targetSite = gameMap.getSite(targetLocation)
                             if (targetSite.owner == myID) and (targetSite.strength > mystrength) and (not isInFriendlyTerritory(targetLocation)):
                                 moves.append(Move(location, dir))
+                                logging.debug('Target combine move: x=' + str(targetLocation.x) + ' y=' + str(targetLocation.y) )
                                 moveToPlanned[targetLocation.x][targetLocation.y] = True
                                 capturefound = True
                                 break
